@@ -2,20 +2,34 @@
 <h3>Interactive Graph</h3>
 <div id="graph-container"></div>
 <style>
-    :root {
-        --g-node: var(--secondary);
-        --g-node-active: var(--primary);
-        --g-node-inactive: var(--visited);
-        --g-link: var(--outlinegray);
-        --g-link-active: #5a7282;
-    }
+  :root {
+    --g-node: var(--secondary);
+    --g-node-active: var(--primary);
+    --g-node-inactive: var(--visited);
+    --g-link: var(--outlinegray);
+    --g-link-active: #5a7282;
+  }
 </style>
 <script>
   const index = {{$.Site.Data.linkIndex.index}}
-  const links = {{$.Site.Data.linkIndex.links}}
+  let links = {{$.Site.Data.linkIndex.links}}
   const curPage = {{ strings.TrimRight "/" .Page.RelPermalink }}
   const pathColors = {{$.Site.Data.graphConfig.paths}}
 
+  if (true) {
+    const depth = 1;
+    let neighbours = [curPage];
+    for (let i = 0; i < depth; i ++) {
+      console.log(neighbours)
+      const fuck = links.filter(l => neighbours.includes(l['target']) || neighbours.includes(l['source']))
+      for (let j = 0; j < fuck.length; j++) {
+          neighbours.push(fuck[j]['source'])
+          neighbours.push(fuck[j]['target'])
+      }
+    }
+    console.log(neighbours)
+    links = links.filter(l => neighbours.includes(l['source']) || neighbours.includes(l['target']))
+  }
   const parseIdsFromLinks = (links) => [...(new Set(links.flatMap(link => ([link.source, link.target]))))]
 
   const data = {
@@ -97,16 +111,28 @@
     })
   }
 
+  svg.append("svg:defs").append("svg:marker")
+    .attr("id", "arrow")
+    .attr("viewBox", "0 -5 10 10")
+    .attr('refX', -20)//so that it comes towards the center.
+    .attr("markerWidth", 5)
+    .attr("markerHeight", 5)
+    .attr("orient", "auto")
+  .append("svg:path")
+    .attr("d", "M0,-5L10,0L0,5")
+    .attr("stroke", "var(--g-link)")
+
   // draw links between nodes
   const link = svg.append("g")
     .selectAll("line")
     .data(data.links)
     .join("line")
-    .attr("class", "link")
     .attr("stroke", "var(--g-link)")
-    .attr("stroke-width", 2)
+    .attr("stroke-width", 1)
     .attr("data-source", d => d.source.id)
     .attr("data-target", d => d.target.id)
+    .attr('marker-start', (d) => "url(#arrow)")//attach the arrow from defs
+    .style( "stroke-width", 2 );
 
   // svg groups
   const graphNode = svg.append("g")
@@ -121,7 +147,7 @@
     .attr("r", (d) => {
       const numOut = index.links[d.id]?.length || 0
       const numIn = index.backlinks[d.id]?.length || 0
-      return 3 + (numOut + numIn) / 4
+      return Math.min(10, 2 + (numOut + numIn) / 2)
     })
     .attr("fill", color)
     .style("cursor", "pointer")

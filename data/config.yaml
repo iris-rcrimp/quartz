@@ -1,12 +1,9 @@
-name: Jacky Zhao
-enableToc: true
-description:
-  Here is the page description. This is an example Quartz site that details installation,
-  setup, customization, and troubleshooting for Quartz itself.
-page_title:
-  Quartz Example Page
+name: Reuben Crisp
+# enableToc: true
+description: description
+page_title: Digital Garden
 links:
-  - link_name: Twitter
-    link: https://twitter.com/_jzhao
-  - link_name: Github
-    link: https://github.com/jackyzha0
+  - link_name: Facebook
+    link: https://https://www.facebook.com/phyterjet
+  - link_name: Developer Portfolio
+    link: https://reubencrimp.com

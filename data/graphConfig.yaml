@@ -1,5 +1,6 @@
-enableLegend: false
+enableLegend: true
 enableDrag: true
+depth: 0
 enableZoom: true
 paths:
   - /moc: "#4388cc"
