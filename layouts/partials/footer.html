@@ -1,21 +1,22 @@
 <hr />
 <div class="page-end">
   <div class="backlinks-container">{{partial "backlinks.html" .}}</div>
+  <div>{{partial "graph.html" .}}</div>
 </div>
-<div>{{partial "graph.html" .}}</div>
+
 
 <!-- Contact Info -->
 <div id="contact_buttons">
   <footer>
     <p>
       Maintained with <a href="https://obsidian.md">Obsidian</a>. Site generated
-      with <a href="https://github.com/jackyzha0/quartz">Quartz</a>, © {{
-      dateFormat "2006" now }}
+      with <a href="https://github.com/jackyzha0/quartz">Quartz</a>, © {{ dateFormat "2006" now }}
     </p>
     {{ if not .IsHome }}
-    <a href="/">Home</a>
-    {{end}} {{- range $.Site.Data.config.links -}}
-    <a href="{{.link}}">{{.link_name}}</a>
-    {{- end -}}
+      <a href="/">Home</a>
+    {{end}}
+    <!-- {{- range $.Site.Data.config.links -}}
+      <a href="{{.link}}">{{.link_name}}</a>
+    {{- end -}} -->
   </footer>
 </div>

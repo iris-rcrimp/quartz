@@ -1,6 +1,7 @@
 <script src="https://cdn.jsdelivr.net/npm/d3@6"></script>
-<h3>Interactive Graph</h3>
-<div id="graph-container"></div>
+<div id="graph-container">
+  <div id="graph-overlay">REUBEN CRISP</div>
+</div>
 <style>
   :root {
     --g-node: var(--secondary);
@@ -16,11 +17,10 @@
   const curPage = {{ strings.TrimRight "/" .Page.RelPermalink }}
   const pathColors = {{$.Site.Data.graphConfig.paths}}
 
-  if (true) {
-    const depth = 1;
+  if (false) {
+    const depth = 3;
     let neighbours = [curPage];
     for (let i = 0; i < depth; i ++) {
-      console.log(neighbours)
       const fuck = links.filter(l => neighbours.includes(l['target']) || neighbours.includes(l['source']))
       for (let j = 0; j < fuck.length; j++) {
           neighbours.push(fuck[j]['source'])
@@ -29,6 +29,7 @@
     }
     console.log(neighbours)
     links = links.filter(l => neighbours.includes(l['source']) || neighbours.includes(l['target']))
+    console.log(neighbours)
   }
   const parseIdsFromLinks = (links) => [...(new Set(links.flatMap(link => ([link.source, link.target]))))]
 
@@ -83,7 +84,7 @@
   const width = document.getElementById("graph-container").offsetWidth
 
   const simulation = d3.forceSimulation(data.nodes)
-    .force("charge", d3.forceManyBody().strength(-20))
+    .force("charge", d3.forceManyBody().strength(-10))
     .force("link", d3.forceLink(data.links)
       .id(d => d.id)
     )
@@ -114,25 +115,26 @@
   svg.append("svg:defs").append("svg:marker")
     .attr("id", "arrow")
     .attr("viewBox", "0 -5 10 10")
-    .attr('refX', -20)//so that it comes towards the center.
+    .attr('refX', -1)//so that it comes towards the center.
     .attr("markerWidth", 5)
     .attr("markerHeight", 5)
     .attr("orient", "auto")
-  .append("svg:path")
-    .attr("d", "M0,-5L10,0L0,5")
-    .attr("stroke", "var(--g-link)")
+    .append("svg:path")
+    .attr("d", "M9,4L1,0L9,-4")
+    .attr("fill", "var(--g-link)")
 
   // draw links between nodes
   const link = svg.append("g")
     .selectAll("line")
     .data(data.links)
     .join("line")
+    .attr('marker-start', (d) => "url(#arrow)")//attach the arrow from defs
     .attr("stroke", "var(--g-link)")
-    .attr("stroke-width", 1)
+    .attr("stroke-width", 2)
     .attr("data-source", d => d.source.id)
     .attr("data-target", d => d.target.id)
-    .attr('marker-start', (d) => "url(#arrow)")//attach the arrow from defs
-    .style( "stroke-width", 2 );
+    
+    // .style("stroke-width", 2 );
 
   // svg groups
   const graphNode = svg.append("g")
@@ -147,7 +149,7 @@
     .attr("r", (d) => {
       const numOut = index.links[d.id]?.length || 0
       const numIn = index.backlinks[d.id]?.length || 0
-      return Math.min(10, 2 + (numOut + numIn) / 2)
+      return Math.min(20, 3 + (numOut + numIn) / 2)
     })
     .attr("fill", color)
     .style("cursor", "pointer")

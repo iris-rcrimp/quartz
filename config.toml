@@ -7,6 +7,9 @@ disablePathToLower = true
 ignoreFiles = [
     "/content/templates/*",
     "/content/private/*",
+    "/content/Notes-David/*",
+    "/content/journals/*",
+    "/content/Kindle-Notes/*",
 ]
 
 [markup]
